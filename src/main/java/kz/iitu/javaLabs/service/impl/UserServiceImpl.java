@@ -1,12 +1,14 @@
 package kz.iitu.javaLabs.service.impl;
 
 import kz.iitu.javaLabs.model.Role;
+import kz.iitu.javaLabs.model.Status;
 import kz.iitu.javaLabs.model.User;
 import kz.iitu.javaLabs.repository.RoleRepository;
 import kz.iitu.javaLabs.repository.UserRepository;
 import kz.iitu.javaLabs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,11 +21,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
+    private final BCryptPasswordEncoder passwordEncoder;
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -31,9 +34,10 @@ public class UserServiceImpl implements UserService {
         Role roleUser = roleRepository.findByName("ROLE_USER");
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(roleUser);
-        user.setId(user.getId());
-        user.setPassword(user.getPassword());
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(userRoles);
+        user.setStatus(Status.ACTIVE);
 
         User registeredUser = userRepository.save(user);
 

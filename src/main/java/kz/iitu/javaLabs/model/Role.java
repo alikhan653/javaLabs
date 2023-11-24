@@ -1,6 +1,6 @@
 package kz.iitu.javaLabs.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 
 import java.util.List;
@@ -8,12 +8,7 @@ import java.util.List;
 @Data
 @Table(name = "roles")
 @Entity
-public class Role {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+public class Role extends BaseEntity{
 
     @Column(name = "name")
     private String name;
@@ -24,7 +19,8 @@ public class Role {
     @Override
     public String toString() {
         return "Role{" +
-                "id: " + id + ", " +
-                "name: " + name + "}";
+                "name='" + name + '\'' +
+                ", userList=" + userList +
+                '}';
     }
 }

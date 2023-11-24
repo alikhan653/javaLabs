@@ -1,32 +1,19 @@
 package kz.iitu.javaLabs.model;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-
-/**
- * Simple domain object that represents application user.
- *
- * @author Eugene Suleimanov
- * @version 1.0
- */
-
 @Entity
 @Table(name = "users", schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+public class User extends BaseEntity{
 
     @Column(name = "username")
     private String username;
@@ -52,7 +39,6 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
                 ", username='" + username + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

@@ -1,15 +1,12 @@
-package kz.iitu.javaLabs.Controller;
+package kz.iitu.javaLabs.controller;
 
 import kz.iitu.javaLabs.model.User;
 import kz.iitu.javaLabs.service.UserService;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Log
 @RestController
@@ -26,10 +23,6 @@ public class UserController {
     @GetMapping("/findById/{id}")
     public User getUserById(@PathVariable(name = "id") Long id){
         User user = userService.findById(id);
-
-        if(user == null){
-            user = new User(999L, null, null, null,null,null, null);
-        }
 
         return user;
     }
