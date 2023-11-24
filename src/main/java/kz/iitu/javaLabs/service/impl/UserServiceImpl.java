@@ -1,5 +1,7 @@
 package kz.iitu.javaLabs.service.impl;
 
+import kz.iitu.javaLabs.dto.AdminUserDto;
+import kz.iitu.javaLabs.dto.UserDto;
 import kz.iitu.javaLabs.model.Role;
 import kz.iitu.javaLabs.model.Status;
 import kz.iitu.javaLabs.model.User;
@@ -12,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -44,6 +47,10 @@ public class UserServiceImpl implements UserService {
         log.info("IN register - user: {} successfully registered", registeredUser);
 
         return registeredUser;
+    }
+    @Override
+    public boolean exists(Long userId) {
+        return userRepository.existsById(userId);
     }
 
     @Override
@@ -78,5 +85,33 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         userRepository.deleteById(id);
         log.info("IN delete - user with id: {} successfully deleted");
+    }
+
+    @Override
+    public void update(AdminUserDto adminUserDto) {
+        User existingUser = userRepository.findById(adminUserDto.getId()).orElse(null);
+
+        if (existingUser != null) {
+            existingUser.setUsername(adminUserDto.getUsername());
+            existingUser.setFirstName(adminUserDto.getFirstName());
+            existingUser.setLastName(adminUserDto.getLastName());
+            existingUser.setEmail(adminUserDto.getEmail());
+            existingUser.setPassword(passwordEncoder.encode(adminUserDto.getPassword()));
+            existingUser.setStatus(Status.valueOf(adminUserDto.getStatus()));
+            User updatedUser = userRepository.save(existingUser);
+            log.info("IN update - user: {} successfully registered", updatedUser);
+        }
+    }
+
+    public void addRelative(Long patientId, User relative) {
+        User patient = userRepository.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        relative.setPatient(patient);
+        userRepository.save(relative);
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
     }
 }

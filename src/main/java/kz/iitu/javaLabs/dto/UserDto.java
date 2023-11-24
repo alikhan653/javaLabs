@@ -1,8 +1,13 @@
 package kz.iitu.javaLabs.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import kz.iitu.javaLabs.model.Role;
+import kz.iitu.javaLabs.model.Status;
 import kz.iitu.javaLabs.model.User;
 import lombok.Data;
+
+import java.util.Date;
+import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -12,6 +17,11 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
+    private List<Role> roles;
+    private Date created;
+    private Date updated;
+    private Status status;
 
     public User toUser(){
         User user = new User();

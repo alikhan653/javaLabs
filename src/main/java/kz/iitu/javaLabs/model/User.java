@@ -36,6 +36,9 @@ public class User extends BaseEntity{
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
 
+    @ManyToOne
+    @JoinColumn(name = "patient_id")
+    private User patient;
     @Override
     public String toString() {
         return "User{" +
@@ -44,7 +47,6 @@ public class User extends BaseEntity{
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", roles=" + roles +
                 '}';
     }
 }

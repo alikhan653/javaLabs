@@ -3,6 +3,7 @@ package kz.iitu.javaLabs.security.jwt;
 import kz.iitu.javaLabs.model.Role;
 import kz.iitu.javaLabs.model.Status;
 import kz.iitu.javaLabs.model.User;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -17,6 +18,7 @@ public final class JwtUserFactory {
     }
 
     public static JwtUser create(User user) {
+        Hibernate.initialize(user.getRoles());
         return new JwtUser(
                 user.getId(),
                 user.getUsername(),
