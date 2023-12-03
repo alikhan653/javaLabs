@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
@@ -20,14 +21,12 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api/v1/admin/")
 public class AdminRestControllerV1 {
-    private final JwtTokenProvider jwtTokenProvider;
 
     private final UserService userService;
 
     @Autowired
-    public AdminRestControllerV1(UserService userService, JwtTokenProvider jwtTokenProvider) {
+    public AdminRestControllerV1(UserService userService) {
         this.userService = userService;
-        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @PostMapping("users")
@@ -90,12 +89,11 @@ public class AdminRestControllerV1 {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @GetMapping("profile")
-    public ResponseEntity<String> getUserProfile(ServletRequest servletRequest) {
+    public ResponseEntity<User> getUserProfile(Principal principal) {
         try {
-            String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
-            String username = jwtTokenProvider.getUsername(token);
+            User user = userService.findByUsername(principal.getName());
 
-            return ResponseEntity.ok(username);
+            return ResponseEntity.ok(user);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

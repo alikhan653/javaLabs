@@ -15,27 +15,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/v1/notifications")
 public class NotificationController {
 
     private final NotificationService notificationService;
-    private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
 
     @Autowired
-    public NotificationController(NotificationService notificationService, JwtTokenProvider jwtTokenProvider, UserService userService) {
+    public NotificationController(NotificationService notificationService, UserService userService) {
         this.notificationService = notificationService;
-        this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
     }
 
     @PostMapping("/schedule")
-    public ResponseEntity<String> scheduleNotification(@RequestBody ScheduleNotificationRequest request, ServletRequest servletRequest) {
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
-        String username = jwtTokenProvider.getUsername(token);
-        User user = userService.findByUsername(username);
+    public ResponseEntity<String> scheduleNotification(@RequestBody ScheduleNotificationRequest request, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
         try {
             notificationService.scheduleMedicineNotifications(
                 user.getId(),
